@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<umap name="DemoJam 2013">
+<objects>
+	<object name="zif_audience" type="I" description="">
+	<definition>
+	interface zif_audience.
+	</definition>
+		
+		<attribute description="">
+			data 
+		 MOOD type  STRING.
+			</attribute>
+		<method>
+				methods RAISE_MOOD  importing !joke type STRING
+					raising.
+			</method>
+	<endDefinition>
+	endinterface.
+	</endDefinition>
+	</object>
+	<object name="zcl_demojam_audience" type="C" isException="false" description="">
+	<definition>
+	class zcl_demojam_audience definition INHERITING FROM ZCL_AUDIENCE.
+	</definition>
+	<publicSection>
+	public section.
+	
+	
+	<method description="">
+	methods TEST  returning value(r_return) type STRING.
+	</method>
+	</publicSection>
+	<protectedSection>
+	protected section.
+	
+	
+	</protectedSection>
+	<privateSection>
+	private section.
+	
+	
+	</privateSection>
+	<endDefinition>
+	endclass.
+	</endDefinition>
+	</object>
+
+	<object name="zcl_audience" type="C" isException="false" description="">
+	<definition>
+	class zcl_audience definition .
+	</definition>
+	<publicSection>
+	public section.
+	<interface>
+		interfaces ZIF_AUDIENCE.
+		</interface>
+	<attribute description="">
+		data 
+	 HANDS type  STRING read-only.
+		</attribute>
+	<method description="">
+	methods CLAP.
+	</method>
+	</publicSection>
+	<protectedSection>
+	protected section.
+	
+	
+	</protectedSection>
+	<privateSection>
+	private section.
+	
+	
+	</privateSection>
+	<endDefinition>
+	endclass.
+	</endDefinition>
+	</object>
+
+</objects>
+</umap>

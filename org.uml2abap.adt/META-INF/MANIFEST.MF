@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Umap Adt Plugin
+Bundle-SymbolicName: org.uml2abap.adt;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Activator: org.uml2abap.adt.Activator
+Bundle-Vendor: TTS
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.sap.adt.oo;bundle-version="2.16.3",
+ com.sap.adt.communication;bundle-version="2.16.0",
+ com.sap.adt.compatibility;bundle-version="2.16.0",
+ com.sap.adt.tools.core;bundle-version="2.16.3",
+ org.eclipse.core.resources,
+ com.sap.adt.destinations.model,
+ com.sap.adt.destinations.ui,
+ com.sap.adt.destinations;bundle-version="2.16.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
