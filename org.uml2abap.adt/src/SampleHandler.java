@@ -72,6 +72,7 @@ import com.sap.adt.tools.core.project.IAbapProject;
 // * @see org.eclipse.core.commands.IHandler
 // * @see org.eclipse.core.commands.AbstractHandler
 // */
+@SuppressWarnings({ "unused", "restriction" })
 public  class SampleHandler extends AbstractHandler {
 	private static final String SAMPLE_FLIGHT_RESOURCE_URI = "/sap/bc/adt/oo/classes/ztest_adt";
 	private static final String MYCOMPANY_DISCOVERY = "/sap/bc/adt/discovery";

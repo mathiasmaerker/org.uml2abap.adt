@@ -7,17 +7,15 @@ import java.util.ArrayList;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ControlContribution;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -29,11 +27,15 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
@@ -41,6 +43,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.uml2abap.adt.UmapParserFactory;
+import org.uml2abap.adt.commons.UmapSessionFactory;
 import org.uml2abap.adt.wrapper.IUmapObject;
 import org.uml2abap.adt.wrapper.UmapObject;
 
@@ -64,7 +67,7 @@ public class UmapView extends ViewPart {
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
-	public static final String ID = "com.tts.umap.adt.views.UmapView";
+	public static final String ID = "org.uml2abap.adt.views.UmapView";
 
 	private TreeViewer viewer;
 	private DrillDownAdapter drillDownAdapter;
@@ -72,6 +75,7 @@ public class UmapView extends ViewPart {
 	private Action connectAction;
 	private Action doubleClickAction;
 	private ArrayList<IUmapObject> objects;
+	IContributionItem test;
 
 	/*
 	 * The content provider class is responsible for providing objects to the
@@ -258,9 +262,16 @@ public class UmapView extends ViewPart {
 								try {
 									umapParserFactory.parseFile(fileSource[0]);
 									objects = umapParserFactory.getObjects();
+									
+									connectAction.setEnabled(true);
+									importAction.setEnabled(true);
+									//@ FIXME Variable ändern 
+									test.setVisible(true);
+									
+									
 									viewer.setInput(objects);
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
+									// TODO Add log support or Message
 									e.printStackTrace();
 								}
 							}
@@ -273,11 +284,14 @@ public class UmapView extends ViewPart {
 
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(viewer.getControl(), "com.tts.umap.adt.viewer");
+				.setHelp(viewer.getControl(), "org.uml2abap.adt.viewer");
 		makeActions();
 		hookContextMenu();
 //		hookDoubleClickAction();
 		contributeToActionBars();
+		connectAction.setEnabled(false);
+		importAction.setEnabled(false);
+		test.setVisible(false);
 	}
 
 	private void hookContextMenu() {
@@ -317,6 +331,7 @@ public class UmapView extends ViewPart {
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(importAction);
 		manager.add(connectAction);
+		manager.add(test);
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
 	}
@@ -330,15 +345,42 @@ public class UmapView extends ViewPart {
 		importAction.setText("Import Objects into SAP");
 		importAction.setToolTipText("Start import of the selected Objects into SAP Backend");
 		importAction.setImageDescriptor(getIconDescriptor("import.gif"));
-
+//		test = new ControlContribution("Test") {
+//			
+//			@Override
+//			protected Control createControl(Composite arg0) {
+////				final Menu m = new Menu(arg0);
+////				MenuItem i1 = new MenuItem(m, SWT.CASCADE);
+////				i1.setText("Eintrag 1");
+////				MenuItem i2 = new MenuItem(m, SWT.CASCADE);
+////				i1.setText("Eintrag 2");
+//	            final Combo c = new Combo(arg0, SWT.READ_ONLY);
+//	            c.add("one");
+//	            c.add("two");
+//	            c.add("three");
+//	            c.select(0);
+//	            c.addSelectionListener(new SelectionAdapter() {
+//	                 public void widgetSelected(SelectionEvent e) {
+//	                     c.add("four");
+//	                  }
+//	                  });
+//	            return c;
+//			}
+//		};
 		connectAction = new Action() {
 			public void run() {
-				
+				try {
+					String[] systems = UmapSessionFactory.getInstance().getAbapProjects();
+				} catch (Exception e) {
+					// TODO Add log or Message
+					e.printStackTrace();
+				}
 			}
 		};
 		connectAction.setText("Connect and Check");
 		connectAction.setToolTipText("Connect to System and check Objects");
 		connectAction.setImageDescriptor(getIconDescriptor("discovery.gif"));
+		
 		
 //		doubleClickAction = new Action() {
 //			public void run() {

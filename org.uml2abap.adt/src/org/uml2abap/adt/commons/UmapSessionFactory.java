@@ -18,15 +18,20 @@ public class UmapSessionFactory {
 	}
 
 	//@ FIXME Exception typ ändern
-	public void connectToSystem() throws Exception{
-		IProject[] projects = AdtProjectServiceFactory.createProjectService()
-				.getAvailableAbapProjects();
-		
-		if (projects.length <= 0)throw new Exception();
-		
-		for (IProject iProject : projects) {
-			IAbapProject abapProject = (IAbapProject)iProject;
-			System.out.println(abapProject.getDestinationDisplayText());
-		}
+	public String[] getAbapProjects() throws Exception{
+//		IProject[] projects = AdtProjectServiceFactory.createProjectService()
+//				.getAvailableAbapProjects();
+//		
+//		if (projects.length <= 0)throw new Exception();
+//		
+//		for (IProject iProject : projects) {
+//			IAbapProject abapProject = (IAbapProject)iProject;
+//			System.out.println(abapProject.getDestinationDisplayText());
+//		}
+		String[] systems = new String[3];
+		systems[0] = "R6T CuserXY";
+		systems[1] = "R6T Cuser12";
+		systems[2] = "R6T Cuser34";
+		return systems;
 	}
 }

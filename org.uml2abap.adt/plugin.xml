@@ -5,15 +5,14 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Umap Category"
-            id="com.tts.umap.adt">
+            name="Uml 2 Abap (Umap)"
+            id="org.uml2abap.adt">
       </category>
       <view
             name="Umap "
-            icon="icons/sample.gif"
-            category="com.tts.umap.adt"
-            class="com.tts.umap.adt.views.UmapView"
-            id="com.tts.umap.adt.views.UmapView">
+            category="org.uml2abap.adt"
+            class="org.uml2abap.adt.views.UmapView"
+            id="org.uml2abap.adt.views.UmapView">
       </view>
    </extension>
    <extension
@@ -24,7 +23,7 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.ProblemView"
                relationship="right"
-               id="com.tts.umap.adt.views.UmapView">
+               id="org.uml2abap.adt.views.UmapView">
          </view>
       </perspectiveExtension>
    </extension>
