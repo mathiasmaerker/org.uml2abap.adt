@@ -33,5 +33,41 @@
             file="contexts.xml">
       </contexts>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.uml2abap.adt.views.UmapView">
+         <command
+               commandId="referenceToMenuID"
+               disabledIcon="icons/discovery.gif"
+               icon="icons/discovery.gif"
+               label="Connect to System"
+               style="pulldown"
+               tooltip="Connect to SAP System">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:referenceToMenuID">
+         <dynamic
+               class="org.uml2abap.adt.views.commands.DynamicContributionItem"
+               id="org.uml2abap.adt.dynamic1">
+         </dynamic>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.uml2abap.adt.views.handler.Hello"
+            id="referenceToMenuID"
+            name="referenceToMenuID">
+      </command>
+      <command
+            defaultHandler="org.uml2abap.adt.views.handler.Hello"
+            id="org.uml2abap.adt.command"
+            name="name">
+      </command>
+   </extension>
 
 </plugin>

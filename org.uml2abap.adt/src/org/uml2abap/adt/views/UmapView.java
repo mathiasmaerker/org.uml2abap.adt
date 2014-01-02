@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
@@ -34,12 +35,18 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.menus.AbstractContributionFactory;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.IContributionRoot;
+import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.services.IServiceLocator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.uml2abap.adt.UmapParserFactory;
@@ -263,10 +270,10 @@ public class UmapView extends ViewPart {
 									umapParserFactory.parseFile(fileSource[0]);
 									objects = umapParserFactory.getObjects();
 									
-									connectAction.setEnabled(true);
-									importAction.setEnabled(true);
-									//@ FIXME Variable ändern 
-									test.setVisible(true);
+//									connectAction.setEnabled(true);
+//									importAction.setEnabled(true);
+//									//@ FIXME Variable ändern 
+//									test.setVisible(true);
 									
 									
 									viewer.setInput(objects);
@@ -285,13 +292,15 @@ public class UmapView extends ViewPart {
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem()
 				.setHelp(viewer.getControl(), "org.uml2abap.adt.viewer");
-		makeActions();
-		hookContextMenu();
-//		hookDoubleClickAction();
-		contributeToActionBars();
-		connectAction.setEnabled(false);
-		importAction.setEnabled(false);
-		test.setVisible(false);
+//		makeActions();
+//		hookContextMenu();
+////		hookDoubleClickAction();
+//		contributeToActionBars();
+//		connectAction.setEnabled(false);
+//		importAction.setEnabled(false);
+//		test.setVisible(false);
+		
+
 	}
 
 	private void hookContextMenu() {
@@ -345,28 +354,28 @@ public class UmapView extends ViewPart {
 		importAction.setText("Import Objects into SAP");
 		importAction.setToolTipText("Start import of the selected Objects into SAP Backend");
 		importAction.setImageDescriptor(getIconDescriptor("import.gif"));
-//		test = new ControlContribution("Test") {
-//			
-//			@Override
-//			protected Control createControl(Composite arg0) {
-////				final Menu m = new Menu(arg0);
-////				MenuItem i1 = new MenuItem(m, SWT.CASCADE);
-////				i1.setText("Eintrag 1");
-////				MenuItem i2 = new MenuItem(m, SWT.CASCADE);
-////				i1.setText("Eintrag 2");
-//	            final Combo c = new Combo(arg0, SWT.READ_ONLY);
-//	            c.add("one");
-//	            c.add("two");
-//	            c.add("three");
-//	            c.select(0);
-//	            c.addSelectionListener(new SelectionAdapter() {
-//	                 public void widgetSelected(SelectionEvent e) {
-//	                     c.add("four");
-//	                  }
-//	                  });
-//	            return c;
-//			}
-//		};
+		test = new ControlContribution("Test") {
+			
+			@Override
+			protected Control createControl(Composite arg0) {
+//				final Menu m = new Menu(arg0);
+//				MenuItem i1 = new MenuItem(m, SWT.CASCADE);
+//				i1.setText("Eintrag 1");
+//				MenuItem i2 = new MenuItem(m, SWT.CASCADE);
+//				i1.setText("Eintrag 2");
+	            final Combo c = new Combo(arg0, SWT.READ_ONLY);
+	            c.add("one");
+	            c.add("two");
+	            c.add("three");
+	            c.select(0);
+	            c.addSelectionListener(new SelectionAdapter() {
+	                 public void widgetSelected(SelectionEvent e) {
+	                     c.add("four");
+	                  }
+	                  });
+	            return c;
+			}
+		};
 		connectAction = new Action() {
 			public void run() {
 				try {
