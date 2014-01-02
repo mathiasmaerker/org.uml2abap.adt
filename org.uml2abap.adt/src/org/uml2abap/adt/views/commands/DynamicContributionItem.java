@@ -1,8 +1,5 @@
 package org.uml2abap.adt.views.commands;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.ui.menus.CommandContributionItem;

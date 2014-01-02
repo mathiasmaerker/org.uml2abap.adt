@@ -15,5 +15,5 @@ Require-Bundle: org.eclipse.ui,
  com.sap.adt.destinations.model,
  com.sap.adt.destinations.ui,
  com.sap.adt.destinations;bundle-version="2.16.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

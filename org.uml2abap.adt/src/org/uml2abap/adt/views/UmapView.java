@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
@@ -37,16 +36,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.menus.AbstractContributionFactory;
-import org.eclipse.ui.menus.CommandContributionItem;
-import org.eclipse.ui.menus.IContributionRoot;
-import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.services.IServiceLocator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.uml2abap.adt.UmapParserFactory;
@@ -112,10 +104,12 @@ public class UmapView extends ViewPart {
 			return parent;
 		}
 
+		@Override
 		public String toString() {
 			return getName();
 		}
 
+		@Override
 		public Object getAdapter(Class key) {
 			return null;
 		}
@@ -153,12 +147,15 @@ public class UmapView extends ViewPart {
 			ITreeContentProvider {
 		private TreeParent invisibleRoot;
 
+		@Override
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getElements(Object parent) {
 			if (parent instanceof ArrayList<?>) {
 				if (invisibleRoot == null)
@@ -168,6 +165,7 @@ public class UmapView extends ViewPart {
 			return getChildren(parent);
 		}
 
+		@Override
 		public Object getParent(Object child) {
 			if (child instanceof TreeObject) {
 				return ((TreeObject) child).getParent();
@@ -175,6 +173,7 @@ public class UmapView extends ViewPart {
 			return null;
 		}
 
+		@Override
 		public Object[] getChildren(Object parent) {
 			if (parent instanceof TreeParent) {
 				return ((TreeParent) parent).getChildren();
@@ -182,6 +181,7 @@ public class UmapView extends ViewPart {
 			return new Object[0];
 		}
 
+		@Override
 		public boolean hasChildren(Object parent) {
 			if (parent instanceof TreeParent)
 				return ((TreeParent) parent).hasChildren();
@@ -204,10 +204,12 @@ public class UmapView extends ViewPart {
 
 	class ViewLabelProvider extends LabelProvider {
 
+		@Override
 		public String getText(Object obj) {
 			return obj.toString();
 		}
 
+		@Override
 		public Image getImage(Object obj) {
 			for (IUmapObject umapObject : objects) {
 				if (((UmapObject) umapObject).getClassMetaData().getClassName()
@@ -239,6 +241,7 @@ public class UmapView extends ViewPart {
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		drillDownAdapter = new DrillDownAdapter(viewer);
@@ -307,6 +310,7 @@ public class UmapView extends ViewPart {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				UmapView.this.fillContextMenu(manager);
 			}
@@ -347,6 +351,7 @@ public class UmapView extends ViewPart {
 
 	private void makeActions() {
 		importAction = new Action() {
+			@Override
 			public void run() {
 				// showMessage("Action 1 executed");
 			}
@@ -369,7 +374,8 @@ public class UmapView extends ViewPart {
 	            c.add("three");
 	            c.select(0);
 	            c.addSelectionListener(new SelectionAdapter() {
-	                 public void widgetSelected(SelectionEvent e) {
+	                 @Override
+					public void widgetSelected(SelectionEvent e) {
 	                     c.add("four");
 	                  }
 	                  });
@@ -377,6 +383,7 @@ public class UmapView extends ViewPart {
 			}
 		};
 		connectAction = new Action() {
+			@Override
 			public void run() {
 				try {
 					String[] systems = UmapSessionFactory.getInstance().getAbapProjects();
@@ -412,6 +419,7 @@ public class UmapView extends ViewPart {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}

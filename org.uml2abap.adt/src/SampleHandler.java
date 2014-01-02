@@ -1,66 +1,28 @@
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URLEncoder;
-
-import javax.swing.ProgressMonitor;
-import javax.xml.XMLConstants;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.osgi.framework.Bundle;
 
-import com.sap.adt.communication.content.AdtContentHandlingFactory;
-import com.sap.adt.communication.content.AdtMediaType;
-import com.sap.adt.communication.content.IContentHandler;
-import com.sap.adt.communication.content.IContentHandlerRegistry;
-import com.sap.adt.communication.content.IContentHandlerResolver;
-import com.sap.adt.communication.content.IContentHandlingFactory;
-import com.sap.adt.communication.content.IContentHandlingService;
-import com.sap.adt.communication.content.asx.IAsxDataFactory;
-import com.sap.adt.communication.message.ByteArrayMessageBody;
-import com.sap.adt.communication.message.IMessageBody;
-import com.sap.adt.communication.message.IResponse;
 import com.sap.adt.communication.resources.AdtRestResourceFactory;
-import com.sap.adt.communication.resources.IQueryParameter;
 import com.sap.adt.communication.resources.IRestResource;
 import com.sap.adt.communication.resources.IRestResourceFactory;
 import com.sap.adt.communication.resources.IUriBuilder;
-import com.sap.adt.communication.resources.QueryParameter;
-import com.sap.adt.communication.resources.ResourceNotFoundException;
 import com.sap.adt.communication.resources.UriBuilder;
-import com.sap.adt.communication.session.AdtSystemSessionFactory;
-import com.sap.adt.communication.session.ISystemSession;
-import com.sap.adt.communication.session.ISystemSessionFactory;
 import com.sap.adt.compatibility.discovery.AdtDiscoveryFactory;
 import com.sap.adt.compatibility.discovery.IAdtDiscovery;
 import com.sap.adt.compatibility.discovery.IAdtDiscoveryCollectionMember;
-import com.sap.adt.compatibility.model.templatelink.IAdtTemplateLink;
-import com.sap.adt.compatibility.uritemplate.IAdtUriTemplate;
-import com.sap.adt.destinations.model.internal.Activator;
 import com.sap.adt.destinations.ui.logon.AdtLogonServiceUIFactory;
 import com.sap.adt.oo.OoPlugin;
-import com.sap.adt.tools.core.model.adtcore.IAdtCoreFactory;
-import com.sap.adt.tools.core.model.adtcore.IAdtMainObject;
 import com.sap.adt.tools.core.project.AdtProjectServiceFactory;
 import com.sap.adt.tools.core.project.IAbapProject;
 
@@ -91,6 +53,7 @@ public  class SampleHandler extends AbstractHandler {
 	public SampleHandler() {
 	}
 
+	@Override
 	@SuppressWarnings("restriction")
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 OoPlugin.getDefault().createClassContentHandler();
