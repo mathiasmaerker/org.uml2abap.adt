@@ -157,6 +157,7 @@ public class UmapView extends ViewPart {
 
 		@Override
 		public Object[] getElements(Object parent) {
+			if (parent instanceof String) return new Object[]{parent.toString()};
 			if (parent instanceof ArrayList<?>) {
 				if (invisibleRoot == null)
 					initialize();
@@ -206,6 +207,7 @@ public class UmapView extends ViewPart {
 
 		@Override
 		public String getText(Object obj) {
+			if (obj instanceof String) return obj.toString();
 			return obj.toString();
 		}
 
@@ -216,13 +218,13 @@ public class UmapView extends ViewPart {
 						.equalsIgnoreCase(obj.toString())) {
 					if (((UmapObject) umapObject).getClassMetaData().getType()
 							.equals("C")) {
-						return getIcon("classes.gif");
+						return getIconDescriptor("classes.gif").createImage();
 					}else{
-						return getIcon("interfaces.gif");
+						return getIconDescriptor("interfaces.gif").createImage();
 					}
 				}
 			}
-			return getIcon("sample.gif");
+			return null;
 		}
 
 
@@ -290,7 +292,7 @@ public class UmapView extends ViewPart {
 					}
 
 				});
-		viewer.setInput("Drag and Drop Uml or Umap File");
+		viewer.setInput(new String("Drag and Drop Uml or Umap File"));
 
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem()
@@ -320,10 +322,11 @@ public class UmapView extends ViewPart {
 		getSite().registerContextMenu(menuMgr, viewer);
 	}
 
-	private void contributeToActionBars() {
+	public void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
-		fillLocalPullDown(bars.getMenuManager());
+//		fillLocalPullDown(bars.getMenuManager());
 		fillLocalToolBar(bars.getToolBarManager());
+		bars.updateActionBars();
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
@@ -343,8 +346,8 @@ public class UmapView extends ViewPart {
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(importAction);
-		manager.add(connectAction);
-		manager.add(test);
+//		manager.add(connectAction);
+//		manager.add(test);
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
 	}
@@ -353,49 +356,29 @@ public class UmapView extends ViewPart {
 		importAction = new Action() {
 			@Override
 			public void run() {
-				// showMessage("Action 1 executed");
+				for (IUmapObject umapObject : objects) {
+					
+				}
 			}
 		};
 		importAction.setText("Import Objects into SAP");
 		importAction.setToolTipText("Start import of the selected Objects into SAP Backend");
 		importAction.setImageDescriptor(getIconDescriptor("import.gif"));
-		test = new ControlContribution("Test") {
-			
-			@Override
-			protected Control createControl(Composite arg0) {
-//				final Menu m = new Menu(arg0);
-//				MenuItem i1 = new MenuItem(m, SWT.CASCADE);
-//				i1.setText("Eintrag 1");
-//				MenuItem i2 = new MenuItem(m, SWT.CASCADE);
-//				i1.setText("Eintrag 2");
-	            final Combo c = new Combo(arg0, SWT.READ_ONLY);
-	            c.add("one");
-	            c.add("two");
-	            c.add("three");
-	            c.select(0);
-	            c.addSelectionListener(new SelectionAdapter() {
-	                 @Override
-					public void widgetSelected(SelectionEvent e) {
-	                     c.add("four");
-	                  }
-	                  });
-	            return c;
-			}
-		};
-		connectAction = new Action() {
-			@Override
-			public void run() {
-				try {
-					String[] systems = UmapSessionFactory.getInstance().getAbapProjects();
-				} catch (Exception e) {
-					// TODO Add log or Message
-					e.printStackTrace();
-				}
-			}
-		};
-		connectAction.setText("Connect and Check");
-		connectAction.setToolTipText("Connect to System and check Objects");
-		connectAction.setImageDescriptor(getIconDescriptor("discovery.gif"));
+
+//		connectAction = new Action() {
+//			@Override
+//			public void run() {
+//				try {
+//					String[] systems = UmapSessionFactory.getInstance().getAbapProjects();
+//				} catch (Exception e) {
+//					// TODO Add log or Message
+//					e.printStackTrace();
+//				}
+//			}
+//		};
+//		connectAction.setText("Connect and Check");
+//		connectAction.setToolTipText("Connect to System and check Objects");
+//		connectAction.setImageDescriptor(getIconDescriptor("discovery.gif"));
 		
 		
 //		doubleClickAction = new Action() {
@@ -423,7 +406,7 @@ public class UmapView extends ViewPart {
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
-	
+	@Deprecated
 	private static Image getIcon(String file) {
 		Bundle bundle = FrameworkUtil.getBundle(UmapView.class);
 		// URL url = FileLocator.find(bundle, new Path("icons/" + file),

@@ -9,10 +9,11 @@
             id="org.uml2abap.adt">
       </category>
       <view
-            name="Umap "
             category="org.uml2abap.adt"
             class="org.uml2abap.adt.views.UmapView"
-            id="org.uml2abap.adt.views.UmapView">
+            icon="icons/umap.gif"
+            id="org.uml2abap.adt.views.UmapView"
+            name="Umap ">
       </view>
    </extension>
    <extension
@@ -59,12 +60,12 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="org.uml2abap.adt.views.handler.Hello"
+            defaultHandler="org.uml2abap.adt.views.handler.ContributionHandler"
             id="referenceToMenuID"
             name="referenceToMenuID">
       </command>
       <command
-            defaultHandler="org.uml2abap.adt.views.handler.Hello"
+            defaultHandler="org.uml2abap.adt.views.handler.ContributionHandler"
             id="org.uml2abap.adt.command"
             name="name">
       </command>
