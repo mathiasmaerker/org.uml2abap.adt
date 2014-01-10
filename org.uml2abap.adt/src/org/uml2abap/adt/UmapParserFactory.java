@@ -118,8 +118,13 @@ public class UmapParserFactory {
 
 			}
 
-		} catch (FileNotFoundException | XMLStreamException
-				| FactoryConfigurationError e) {
+		} catch (FileNotFoundException e){
+			//TODO Log
+		}
+		catch (XMLStreamException e){
+			// TODO Log
+		}
+		catch (FactoryConfigurationError e) {
 			e.printStackTrace();
 		}
 
