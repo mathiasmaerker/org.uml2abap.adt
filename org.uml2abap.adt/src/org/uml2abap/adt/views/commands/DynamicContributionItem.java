@@ -1,8 +1,6 @@
 package org.uml2abap.adt.views.commands;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.ui.menus.CommandContributionItem;
