@@ -156,4 +156,12 @@ public class UmapObject implements IUmapObject {
 		return false;
 	}
 
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
 }

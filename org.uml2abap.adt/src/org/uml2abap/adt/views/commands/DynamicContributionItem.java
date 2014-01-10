@@ -45,8 +45,7 @@ for (IAbapProject project : sessions) {
 	  contributionParameter.visibleEnabled = true;
 	  items.add(new CommandContributionItem(contributionParameter));
 }
-
-	return (IContributionItem[]) items.toArray();
+	return items.toArray(new IContributionItem[items.size()]);
 } catch (Exception e) {
 	// TODO log
 	e.printStackTrace();

@@ -37,6 +37,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.uml2abap.adt.UmapParserFactory;
+import org.uml2abap.adt.commons.UmapSessionFactory;
 import org.uml2abap.adt.wrapper.IUmapObject;
 import org.uml2abap.adt.wrapper.UmapObject;
 
@@ -317,6 +318,7 @@ public class UmapView extends ViewPart {
 	}
 
 	public void contributeToActionBars() {
+		makeActions();
 		IActionBars bars = getViewSite().getActionBars();
 //		fillLocalPullDown(bars.getMenuManager());
 		fillLocalToolBar(bars.getToolBarManager());
@@ -351,7 +353,11 @@ public class UmapView extends ViewPart {
 			@Override
 			public void run() {
 				for (IUmapObject umapObject : objects) {
+					((UmapObject)umapObject).setDestination(UmapSessionFactory.getInstance().getCurrentProject().getDestinationId());
+//					umapObject.aquireLock();
+					umapObject.createClass();
 					
+					umapObject.updateSource();
 				}
 			}
 		};

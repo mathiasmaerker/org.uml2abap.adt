@@ -35,7 +35,7 @@ public class ContributionHandler extends AbstractHandler {
 					IWorkbenchPage page = PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow().getActivePage();
 					UmapView view = (UmapView) page
-							.findView("org.uml2abap.adt.UmapView");
+							.findView(UmapView.ID);
 					
 					view.contributeToActionBars();
 				}
