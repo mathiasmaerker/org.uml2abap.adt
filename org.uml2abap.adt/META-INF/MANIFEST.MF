@@ -4,7 +4,7 @@ Bundle-Name: Umap Adt Plugin
 Bundle-SymbolicName: org.uml2abap.adt;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.uml2abap.adt.Activator
-Bundle-Vendor: Mathias Märker / MichaelLuther
+Bundle-Vendor: Mathias Märker / Michael Luther
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.sap.adt.oo;bundle-version="2.16.3",
