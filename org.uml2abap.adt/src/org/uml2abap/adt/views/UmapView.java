@@ -207,12 +207,12 @@ public class UmapView extends ViewPart {
 
 		@Override
 		public String getText(Object obj) {
-			if (obj instanceof String) return obj.toString();
 			return obj.toString();
 		}
 
 		@Override
 		public Image getImage(Object obj) {
+			if (objects == null) return null;
 			for (IUmapObject umapObject : objects) {
 				if (((UmapObject) umapObject).getClassMetaData().getClassName()
 						.equalsIgnoreCase(obj.toString())) {

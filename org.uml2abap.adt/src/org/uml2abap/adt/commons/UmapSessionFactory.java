@@ -38,11 +38,9 @@ public class UmapSessionFactory {
 
 		return list;
 	}
-	//@ FIXME Ändern in IPROJECT 
 	public IAbapProject getCurrentProject() {
 		return currentProject;
 	}
-//@ FIXME Ändern in IPROJECT 
 	public void setCurrentProject(IAbapProject currentProject) {
 		this.currentProject = currentProject;
 
