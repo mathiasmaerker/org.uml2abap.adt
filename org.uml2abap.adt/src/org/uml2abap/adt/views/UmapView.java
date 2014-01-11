@@ -354,9 +354,9 @@ public class UmapView extends ViewPart {
 			public void run() {
 				for (IUmapObject umapObject : objects) {
 					((UmapObject)umapObject).setDestination(UmapSessionFactory.getInstance().getCurrentProject().getDestinationId());
-//					umapObject.aquireLock();
+//					TODO geschachtelt in einem Aufruf? Überprüfen ob Klasse schon existiert etc.
 					umapObject.createClass();
-					
+					umapObject.aquireLock();
 					umapObject.updateSource();
 				}
 			}

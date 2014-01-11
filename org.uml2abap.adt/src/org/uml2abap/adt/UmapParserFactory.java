@@ -1,11 +1,12 @@
 package org.uml2abap.adt;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.stream.FactoryConfigurationError;
@@ -14,15 +15,17 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.ui.PlatformUI;
 import org.uml2abap.adt.data.ClassMetaData;
 import org.uml2abap.adt.data.ClassSource;
 import org.uml2abap.adt.wrapper.IUmapObject;
 import org.uml2abap.adt.wrapper.UmapObject;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.common.util.BasicMonitor;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import com.tts.umap.umapExport.UmapExportMain;
 
@@ -63,35 +66,55 @@ public class UmapParserFactory {
  * @param URI thr URI of the UML file
  */
 	private void doGenerate(final String file) {
-//		IRunnableWithProgress progress = new IRunnableWithProgress() {
-			
+//		IRunnableWithProgress operation = new IRunnableWithProgress() {
 //			@Override
 //			public void run(IProgressMonitor monitor) throws InvocationTargetException,
 //					InterruptedException {
-//				URI modelURI = URI.createPlatformResourceURI(file, true);	
 //				try {
-//					UmapExportMain exportMain = new UmapExportMain(modelURI, null, null);
+//					URI model = URI.createFileURI(file);
+//					UmapExportMain exportMain = new UmapExportMain(model, null, null);
 //					generatedFiles = exportMain.generate(BasicMonitor.toMonitor(monitor));
 //				} catch (IOException e) {
 //					e.printStackTrace();
 //				}
 //			}
 //		};
-		
-		URI modelURI = URI.createPlatformResourceURI(file, true);	
+//		try {
+//			PlatformUI.getWorkbench().getProgressService().run(true, true, operation);
+//		} catch (InvocationTargetException e) {
+//			// TODO log
+//			e.printStackTrace();
+//		} catch (InterruptedException e) {
+//			// TODO log
+//			e.printStackTrace();
+//		}
+//		Platform.
+//		URI modelURI = URI.createPlatformResourceURI(file, true);	
+		URI model = URI.createFileURI(file);
 		try {
-			UmapExportMain exportMain = new UmapExportMain(modelURI, null, null);
+			UmapExportMain exportMain = new UmapExportMain(model, null, getArguments());
 			generatedFiles = exportMain.generate(BasicMonitor.toMonitor(new NullProgressMonitor()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	
+//	
 		for (Map.Entry<String, String> entries : generatedFiles.entrySet()) {
 			System.out.println(entries.getKey());
+			parseUmapFile(entries.getValue());
 		}
 	}
-
-	private void parseUmapFile(String uRI) {
+	
+	private void parseUmapFile(File URI) {
+		InputStream stream = getClass().getResourceAsStream(URI.getAbsolutePath());
+		parseUmapFile(stream);
+	}
+	
+	private void parseUmapFile(String generatedFile) {
+		InputStream stream = new ByteArrayInputStream(generatedFile.getBytes());
+		parseUmapFile(stream);
+	}
+	
+	private void parseUmapFile(InputStream is){
 		try {
 			UmapObject umapObject = new UmapObject();
 			ClassMetaData metaData = new ClassMetaData();
@@ -103,10 +126,7 @@ public class UmapParserFactory {
 
 			XMLStreamReader reader = XMLInputFactory
 					.newInstance()
-					.createXMLStreamReader(
-							new FileReader(
-									new File(
-											uRI)));
+					.createXMLStreamReader(is);
 			int xmlEvent = reader.getEventType();
 			while (reader.hasNext()) {
 				xmlEvent = reader.next();
@@ -156,9 +176,7 @@ public class UmapParserFactory {
 
 			}
 
-		} catch (FileNotFoundException e){
-			//TODO Log
-		}
+		} 
 		catch (XMLStreamException e){
 			// TODO Log
 		}
@@ -170,6 +188,16 @@ public class UmapParserFactory {
 
 	public ArrayList<IUmapObject> getObjects() {
 		return objects;
+	}
+	
+	/**
+	 * Computes the arguments of the generator.
+	 * 
+	 * @return the arguments
+	 * @generated
+	 */
+	protected List<? extends Object> getArguments() {
+		return new ArrayList<String>();
 	}
 
 }
