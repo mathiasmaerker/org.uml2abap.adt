@@ -263,7 +263,7 @@ public class UmapView extends ViewPart {
 						if (fileSource.length <= 1) {
 							// FIXME Momentan nur Umap dateien und nur eine
 							// einzige
-							if (fileSource[0].endsWith(".umap")) {
+							if (fileSource[0].endsWith(".umap") || fileSource[0].endsWith(".uml") ) {
 								UmapParserFactory umapParserFactory = UmapParserFactory
 										.getInstance();
 								try {

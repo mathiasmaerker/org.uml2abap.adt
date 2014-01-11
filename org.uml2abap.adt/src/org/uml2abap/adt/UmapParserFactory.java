@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
@@ -16,11 +18,19 @@ import org.uml2abap.adt.data.ClassMetaData;
 import org.uml2abap.adt.data.ClassSource;
 import org.uml2abap.adt.wrapper.IUmapObject;
 import org.uml2abap.adt.wrapper.UmapObject;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+
+import com.tts.umap.umapExport.UmapExportMain;
 
 public class UmapParserFactory {
 
 	private static final UmapParserFactory INSTANCE = new UmapParserFactory();
 	private ArrayList<IUmapObject> objects = new ArrayList<IUmapObject>();
+	private Map<String, String> generatedFiles;
 
 	private UmapParserFactory() {
 		super();
@@ -47,10 +57,38 @@ public class UmapParserFactory {
 		// File file = new File(URI);
 
 	}
-
-	private void doGenerate(String uRI) {
-		// TODO Call generator
-
+/**
+ * This Method will parse a given UML file with the dependend plugin org.uml2abap.umap to generate a so called
+ * UMAP file, which by itself will be parsed by {@link org.uml2abap.adt.UmapParserFactory}
+ * @param URI thr URI of the UML file
+ */
+	private void doGenerate(final String file) {
+//		IRunnableWithProgress progress = new IRunnableWithProgress() {
+			
+//			@Override
+//			public void run(IProgressMonitor monitor) throws InvocationTargetException,
+//					InterruptedException {
+//				URI modelURI = URI.createPlatformResourceURI(file, true);	
+//				try {
+//					UmapExportMain exportMain = new UmapExportMain(modelURI, null, null);
+//					generatedFiles = exportMain.generate(BasicMonitor.toMonitor(monitor));
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		};
+		
+		URI modelURI = URI.createPlatformResourceURI(file, true);	
+		try {
+			UmapExportMain exportMain = new UmapExportMain(modelURI, null, null);
+			generatedFiles = exportMain.generate(BasicMonitor.toMonitor(new NullProgressMonitor()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+		for (Map.Entry<String, String> entries : generatedFiles.entrySet()) {
+			System.out.println(entries.getKey());
+		}
 	}
 
 	private void parseUmapFile(String uRI) {
