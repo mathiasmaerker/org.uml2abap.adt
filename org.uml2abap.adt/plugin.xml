@@ -12,7 +12,7 @@
             allowMultiple="false"
             category="org.uml2abap.adt"
             class="org.uml2abap.adt.views.UmapView"
-            icon="icons/umap.gif"
+            icon="icons/umap_logo_cropped.gif"
             id="org.uml2abap.adt.views.UmapView"
             name="Umap ">
       </view>
