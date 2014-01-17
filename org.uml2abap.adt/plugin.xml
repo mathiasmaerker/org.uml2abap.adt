@@ -9,6 +9,7 @@
             id="org.uml2abap.adt">
       </category>
       <view
+            allowMultiple="false"
             category="org.uml2abap.adt"
             class="org.uml2abap.adt.views.UmapView"
             icon="icons/umap.gif"
