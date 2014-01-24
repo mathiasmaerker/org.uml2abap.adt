@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.uml2abap.adt.Activator;
 import org.uml2abap.adt.commons.UmapSessionFactory;
 import org.uml2abap.adt.views.UmapView;
 
@@ -18,10 +21,9 @@ public class ContributionHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		// @ TODO echte implementierung mit setzen der Session anstelle der
-		// Dummy werte
-		Event event2 = (Event) event.getTrigger();
-		MenuItem item = (MenuItem) event2.widget;
+		 Event eve =  (Event) event.getTrigger();
+		 if (!(eve.widget instanceof MenuItem)) return null;
+		 MenuItem item = (MenuItem) eve.widget;
 		try {
 			ArrayList<IAbapProject> projects = UmapSessionFactory.getInstance()
 					.getAbapProjects();
@@ -42,12 +44,9 @@ public class ContributionHandler extends AbstractHandler {
 			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Exception in Contributionhandler", e);
+			Activator.getDefault().getLog().log(status);
 		}
-		// MessageDialog.openInformation(HandlerUtil.getActiveWorkbenchWindow(event).getShell(),
-		// "Info", event.getTrigger().toString());
-
 		return null;
 	}
 

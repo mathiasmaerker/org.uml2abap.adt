@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +14,11 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.ui.PlatformUI;
 import org.uml2abap.adt.data.ClassMetaData;
 import org.uml2abap.adt.data.ClassSource;
 import org.uml2abap.adt.wrapper.IUmapObject;
@@ -93,11 +90,14 @@ public class UmapParserFactory {
 		URI model = URI.createFileURI(file);
 		try {
 			UmapExportMain exportMain = new UmapExportMain(model, null, getArguments());
+			Activator.getDefault().getLog().log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "No Dump yet, next doGeneration in UmapExportMain"));
 			generatedFiles = exportMain.generate(BasicMonitor.toMonitor(new NullProgressMonitor()));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "IOException during generation", e));
+			return;
 		}
 //	
+		Activator.getDefault().getLog().log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "No Dump yet, next parse UmapFile"));
 		for (Map.Entry<String, String> entries : generatedFiles.entrySet()) {
 			System.out.println(entries.getKey());
 			parseUmapFile(entries.getValue());
@@ -110,7 +110,7 @@ public class UmapParserFactory {
 	}
 	
 	private void parseUmapFile(String generatedFile) {
-		InputStream stream = new ByteArrayInputStream(generatedFile.getBytes());
+		InputStream stream = new ByteArrayInputStream(generatedFile.trim().getBytes());
 		parseUmapFile(stream);
 	}
 	
@@ -178,10 +178,14 @@ public class UmapParserFactory {
 
 		} 
 		catch (XMLStreamException e){
-			// TODO Log
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+					"Error while parsing XML", e);
+			Activator.getDefault().getLog().log(status);
 		}
 		catch (FactoryConfigurationError e) {
-			e.printStackTrace();
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+					"XML Streamfactory Error", e);
+			Activator.getDefault().getLog().log(status);
 		}
 
 	}

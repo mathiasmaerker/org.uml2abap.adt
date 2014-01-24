@@ -11,7 +11,10 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.uml2abap.adt.Activator;
 import org.uml2abap.adt.commons.IUmapConstants;
 import org.uml2abap.adt.contentHandler.ClassMetaDataContentHandler;
 import org.uml2abap.adt.contentHandler.ClassSourceContentHandler;
@@ -35,20 +38,16 @@ import com.sap.adt.compatibility.discovery.IAdtDiscoveryCollectionMember;
 
 /**
  * @author MaerkerMa
- *
+ * 
  */
 public class UmapObject implements IUmapObject {
 	private ClassMetaData classMetaData;
-	private String lockHandle; 
+	private String lockHandle;
 	private String destination;
 	private URI ressourcePath;
-	private IRestResourceFactory restResourceFactory = AdtRestResourceFactory
-			.createRestResourceFactory();
+	private IRestResourceFactory restResourceFactory;
 	private ISystemSession session;
-	
-	
-	
-	
+
 	public ClassMetaData getClassMetaData() {
 		return classMetaData;
 	}
@@ -57,25 +56,32 @@ public class UmapObject implements IUmapObject {
 		this.classMetaData = classMetaData;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.tts.umap.adt.wrapper.IUmapObject#aquireLock()
 	 */
 	@Override
 	public void aquireLock() throws ResourceException {
-		ISystemSessionFactory factory = AdtSystemSessionFactory.createSystemSessionFactory();
+		// FIXME Exceptiontyp ändern
+		ISystemSessionFactory factory = AdtSystemSessionFactory
+				.createSystemSessionFactory();
 		session = factory.getEnqueueSession(destination);
-		URI classUri = new UriBuilder(getDiscoveryURI(destination)).addPathSegments(classMetaData.getClassName()).getUri();
-		IRestResource classResource = restResourceFactory 
+		URI classUri = new UriBuilder(getDiscoveryURI(destination))
+				.addPathSegments(classMetaData.getClassName()).getUri();
+		IRestResource classResource = getRestResourceFactory()
 				.createRestResource(classUri, session);
-		 
-		IQueryParameter [] parameters = new QueryParameter[2]; 
+
+		IQueryParameter[] parameters = new QueryParameter[2];
 		parameters[0] = new QueryParameter("_action", "LOCK");
 		parameters[1] = new QueryParameter("accessMode", "MODIFY");
-		
-//		flightResource = restResourceFactory
-//				.createResourceWithStatelessSession(getFlightURI(destination, metaData.getClassName()), destination);				
-		IResponse response = classResource.post(null, IResponse.class, parameters);
-		IMessageBody body = response.getBody();	
+
+		// flightResource = restResourceFactory
+		// .createResourceWithStatelessSession(getFlightURI(destination,
+		// metaData.getClassName()), destination);
+		IResponse response = classResource.post(null, IResponse.class,
+				parameters);
+		IMessageBody body = response.getBody();
 		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
 		XMLStreamReader reader;
 		try {
@@ -85,22 +91,28 @@ public class UmapObject implements IUmapObject {
 				eventTYpe = reader.next();
 				System.out.println(eventTYpe);
 
-				if (eventTYpe == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("LOCK_HANDLE")) {
+				if (eventTYpe == XMLStreamConstants.START_ELEMENT
+						&& reader.getLocalName().equals("LOCK_HANDLE")) {
 					reader.next();
+					//@ TODO Was Passiert wenn ich kein Lockhandle bekomme?
 					lockHandle = reader.getText().trim();
 				}
-			}			
+			}
 		} catch (XMLStreamException e) {
-			// TODO Log
-			e.printStackTrace();
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+					"Error while parsing XML", e);
+			Activator.getDefault().getLog().log(status);
 		} catch (IOException e) {
-			// TODO log
-			e.printStackTrace();
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+					"IOError", e);
+			Activator.getDefault().getLog().log(status);
 		}
-		
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.tts.umap.adt.wrapper.IUmapObject#releaseLock()
 	 */
 	@Override
@@ -109,44 +121,62 @@ public class UmapObject implements IUmapObject {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.tts.umap.adt.wrapper.IUmapObject#createClass()
 	 */
 	@Override
 	public void createClass() throws ResourceException {
+		// FIXME Exceptiontyp ändern
 		ClassMetaDataContentHandler metaDataContentHandler = new ClassMetaDataContentHandler();
-		URI classUri = new UriBuilder(getDiscoveryURI(destination)).addPathSegments(classMetaData.getClassName()).getUri();
-		IRestResource resource = restResourceFactory.createResourceWithStatelessSession(classUri, destination);
+		URI classUri = new UriBuilder(getDiscoveryURI(destination))
+				.addPathSegments(classMetaData.getClassName()).getUri();
+		IRestResource resource = getRestResourceFactory()
+				.createResourceWithStatelessSession(classUri, destination);
 		resource.addContentHandler(metaDataContentHandler);
-		IMessageBody messageBody = metaDataContentHandler.serialize(classMetaData, null);
-		IResponse response = resource.post(null, IResponse.class, messageBody, (IQueryParameter)null);
-//		TODO Fehlerhandling und Status abfragen
+		IMessageBody messageBody = metaDataContentHandler.serialize(
+				classMetaData, null);
+		IResponse response = resource.post(null, IResponse.class, messageBody,
+				(IQueryParameter) null);
+		// TODO Fehlerhandling und Status abfragen
 		response.getStatus();
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.tts.umap.adt.wrapper.IUmapObject#updateSource()
 	 */
 	@Override
 	public void updateSource() throws ResourceException {
-		URI classUri = new UriBuilder(getDiscoveryURI(destination)).addPathSegments(classMetaData.getClassName()).addPathSegments("source").addPathSegments("main").getUri();
-		IRestResource resource = restResourceFactory.createRestResource(classUri, session);
-		
+		// FIXME Exceptiontyp ändern
+		URI classUri = new UriBuilder(getDiscoveryURI(destination))
+				.addPathSegments(classMetaData.getClassName())
+				.addPathSegments("source").addPathSegments("main").getUri();
+		IRestResource resource = getRestResourceFactory().createRestResource(
+				classUri, session);
+
 		ClassSourceContentHandler sourceContentHandler = new ClassSourceContentHandler();
-		IMessageBody body = sourceContentHandler.serialize(classMetaData.getClassSource(), null);
-		IQueryParameter[] parameters = new IQueryParameter[1]; 
+		IMessageBody body = sourceContentHandler.serialize(
+				classMetaData.getClassSource(), null);
+		IQueryParameter[] parameters = new IQueryParameter[1];
 		parameters[0] = new QueryParameter("lockHandle", lockHandle);
-		IResponse response = resource.put(null, IResponse.class, body, parameters );
+		IResponse response = resource.put(null, IResponse.class, body,
+				parameters);
 		response.getStatus();
 	}
+
 	// FIXME auslagern in sessionfactory
-	private URI getDiscoveryURI(String destination){
+	private URI getDiscoveryURI(String destination) {
 		IAdtDiscovery discovery = AdtDiscoveryFactory.createDiscovery(
-				destination, URI.create(IUmapConstants.DISCOVERY_URI)); 
-		String term = (getClassMetaData().getType().equalsIgnoreCase("C")) ? IUmapConstants.TERM_CLASSES : IUmapConstants.TERM_INTERFACES;
+				destination, URI.create(IUmapConstants.DISCOVERY_URI));
+		String term = (getClassMetaData().getType().equalsIgnoreCase("C")) ? IUmapConstants.TERM_CLASSES
+				: IUmapConstants.TERM_INTERFACES;
 		IAdtDiscoveryCollectionMember collectionMember = discovery
-				.getCollectionMember(IUmapConstants.OO_SCHEME, term, new NullProgressMonitor());
+				.getCollectionMember(IUmapConstants.OO_SCHEME, term,
+						new NullProgressMonitor());
 		return collectionMember.getUri();
 	}
 
@@ -162,6 +192,17 @@ public class UmapObject implements IUmapObject {
 
 	public void setDestination(String destination) {
 		this.destination = destination;
+	}
+
+	public IRestResourceFactory getRestResourceFactory() {
+		if (restResourceFactory == null)
+			restResourceFactory = AdtRestResourceFactory
+					.createRestResourceFactory();
+		return restResourceFactory;
+	}
+
+	public void setRestResourceFactory(IRestResourceFactory restResourceFactory) {
+		this.restResourceFactory = restResourceFactory;
 	}
 
 }
