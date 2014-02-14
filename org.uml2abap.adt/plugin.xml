@@ -71,5 +71,10 @@
             name="name">
       </command>
    </extension>
+   <extension
+         id="org.uml2abap.product"
+         name="Umap"
+         point="org.eclipse.core.runtime.products">
+   </extension>
 
 </plugin>

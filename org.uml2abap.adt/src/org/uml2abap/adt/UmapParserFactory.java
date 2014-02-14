@@ -86,7 +86,7 @@ public class UmapParserFactory {
 //			e.printStackTrace();
 //		}
 //		Platform.
-//		URI modelURI = URI.createPlatformResourceURI(file, true);	
+//		URI model = URI.createPlatformResourceURI(file, true);	
 		URI model = URI.createFileURI(file);
 		try {
 			UmapExportMain exportMain = new UmapExportMain(model, null, getArguments());
